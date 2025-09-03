@@ -9,6 +9,11 @@ import axios from "axios";
 
 interface PageSpeedResponse {
   lighthouseResult: {
+    audits: {
+      "first-contentful-paint": {
+        displayValue: string;
+      };
+    };
     categories: {
       performance: {
         score: number;
@@ -30,7 +35,7 @@ export default function Home() {
         `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&key=${process.env.NEXT_PUBLIC_PAGESPEED_API_KEY}&strategy=mobile`
       );
       setPageSpeedResponse(response.data);
-      console.log(response.data);
+      // console.log(response.data);
     } catch (error) {
       console.log("Error fetching PageSpeed data:", error);
     }
@@ -43,7 +48,7 @@ export default function Home() {
     try {
       const res = await analyze(url);
       setResponse(res.data);
-      console.log(res.data);
+      // console.log(res.data);
     } catch (error) {
       console.log("Error during analysis:", error);
     }
