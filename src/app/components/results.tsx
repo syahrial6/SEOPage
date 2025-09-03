@@ -1,7 +1,7 @@
 import React from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { IoMdCloseCircle } from "react-icons/io";
-import { IoIosWarning } from "react-icons/io";
+
 import { SEOResult } from "../api/api"; // Adjust the import path as necessary
 import { RiErrorWarningFill } from "react-icons/ri";
 

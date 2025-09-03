@@ -12,11 +12,12 @@ export default function Home() {
   const [response, setResponse] = useState<SEOResult | null>(null);
   const [pageSpeedResponse, setPageSpeedResponse] = useState<any | null>(null);
   const [loading, setLoading] = useState(false);
+ 
 
   const handlePageSpeed = async () => {
     try {
       const response = await axios.get(
-        `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&key=AIzaSyCtPSayvamj4T5dhdXFIwgm46J0cLCbCn8&strategy=mobile`
+        `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&key=${process.env.NEXT_PUBLIC_PAGESPEED_API_KEY}&strategy=mobile`
       );
       setPageSpeedResponse(response.data);
       console.log(response.data);
