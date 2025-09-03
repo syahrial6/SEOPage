@@ -5,10 +5,22 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { SEOResult } from "../api/api"; // Adjust the import path as necessary
 import { RiErrorWarningFill } from "react-icons/ri";
 
+
+
+interface PageSpeedResponse {
+  lighthouseResult: {
+    categories: {
+      performance: {
+        score: number;
+      };
+    };
+  }
+}
+
 interface ResultsProps {
   url: string;
   response: SEOResult | null;
-  pageSpeedResponse?: any | null;
+  pageSpeedResponse?: PageSpeedResponse | null;
 }
 
 const Results = ({ url, response, pageSpeedResponse }: ResultsProps) => {

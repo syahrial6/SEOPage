@@ -7,10 +7,20 @@ import { SEOResult } from "./api/api";
 import Results from "./components/results";
 import axios from "axios";
 
+interface PageSpeedResponse {
+  lighthouseResult: {
+    categories: {
+      performance: {
+        score: number;
+      };
+    };
+  }
+}
+
 export default function Home() {
   const [url, setUrl] = useState("");
   const [response, setResponse] = useState<SEOResult | null>(null);
-  const [pageSpeedResponse, setPageSpeedResponse] = useState<any | null>(null);
+  const [pageSpeedResponse, setPageSpeedResponse] = useState<PageSpeedResponse | null>(null);
   const [loading, setLoading] = useState(false);
  
 
