@@ -1,103 +1,82 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { analyze } from "./api/api";
+
+import { SEOResult } from "./api/api";
+import Results from "./components/results";
+import axios from "axios";
 
 export default function Home() {
-  return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+  const [url, setUrl] = useState("");
+  const [response, setResponse] = useState<SEOResult | null>(null);
+  const [pageSpeedResponse, setPageSpeedResponse] = useState<any | null>(null);
+  const [loading, setLoading] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+  const handlePageSpeed = async () => {
+    try {
+      const response = await axios.get(
+        `https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=${url}&key=AIzaSyCtPSayvamj4T5dhdXFIwgm46J0cLCbCn8&strategy=mobile`
+      );
+      setPageSpeedResponse(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.log("Error fetching PageSpeed data:", error);
+    }
+  };
+  const handleAnalyze = async () => {
+    if (!url) {
+      alert("Please enter a URL");
+      return;
+    }
+    try {
+      const res = await analyze(url);
+      setResponse(res.data);
+      console.log(res.data);
+    } catch (error) {
+      console.log("Error during analysis:", error);
+    }
+  };
+
+  const handleFunction = async () => {
+    setLoading(true);
+    await handleAnalyze();
+    await handlePageSpeed();
+    setLoading(false);
+  };
+
+  return (
+    <div className="bg-violet-50 w-full min-h-screen">
+      <h1 className="text-4xl text-violet-500 font-bold text-center py-12">
+        SEO Analyzer Tool
+      </h1>
+      <div className="flex justify-center items-center">
+        <input
+          type="text"
+          onChange={(e) => setUrl(e.target.value)}
+          placeholder="Enter URL to analyze"
+          className="w-1/2 p-3 border border-violet-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
+        />
+        <button
+          onClick={handleFunction}
+          className=" bg-violet-500 text-white px-6 py-3 rounded-lg hover:bg-violet-600 transition-colors"
+        >
+          Analyze
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="mt-8 text-center">
+        <span className="loading loading-spinner text-4xl text-center m-auto text-purple-500"></span>
+        <p className="text-2xl text-purple-500">Loading</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      ) : (
+        <Results
+          url={url}
+          response={response}
+          pageSpeedResponse={pageSpeedResponse}
+        />
+      )}
     </div>
   );
 }
